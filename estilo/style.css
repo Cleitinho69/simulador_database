@@ -45,3 +45,11 @@ article{
     height: 50px;
     border-radius: 30px;
 }
+#btnPesquisar img{
+    width: 35px;
+    height: 35px;
+}
+
+#cadastrar{
+    margin-top: 25px;
+}
