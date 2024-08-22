@@ -115,4 +115,4 @@ btnPesquisar.addEventListener("click", () => {
       }
     });
   });
-});;;;
+});
