@@ -1,118 +1,151 @@
 const btnCadastrar = document.querySelector("#cadastrar");
 const btnAuto_cadastrar = document.querySelector("#auto_cadastrar");
 const btnImprimir = document.querySelector("#imprimir");
-// caixas de textos
-let txtNome = document.querySelector("#nome");
-let txtIdade = document.querySelector("#idade");
-let txtCurso = document.querySelector("#curso");
-// arreys
-var nome = [];
-var idade = [];
-var curso = [];
+
+// matriz
+var alunos = [];
+
+// função para excluir a tudo
+function excluir(){
+  // aqui pega todos os botões excluir
+  let btnExcluir = [...document.querySelectorAll(".lixo")];
+  // aqui percorre por todos eles e coloca uma função de click
+  btnExcluir.map((el) => {
+    //aqui é uma função de click que indentifica ela mesma com o "event" 
+    el.addEventListener("click", (event) => {
+      // aqui ele faz um puta role no DOM pra achar o nome ao qual ele está sendo clicado
+      procNome=event.target.nextElementSibling.children[0].innerText;
+      // aqui ele percorre a matriz e procura o nome e exclui caso seja encontrado
+      alunos.map((el,pos)=>{
+        el.map((elem)=>{
+          if(elem==procNome){
+            // aqui ele confirma se você quer excluir o aluno
+            if (confirm(`certeza que deseja excluir ${el[pos]}?`)) {
+              // aqui é uma forma de faciliar a indenticar onde ele está inserido no html
+              let caixa = event.target.parentNode;
+              // aqui ele apaga o a caixa
+              caixa.parentNode.removeChild(caixa);
+              // aqui ele remove o aluno da matriz
+              alunos.splice(pos,1);
+              console.log(alunos);
+            }
+          }
+        })
+      });
+    });
+  });
+}
 
 // botão cadastrar
 btnCadastrar.addEventListener("click", () => {
-  if (txtNome.value != "" && txtIdade.value != "" && txtCurso.value != "") {
-    nome.push(txtNome.value);
-    idade.push(txtIdade.value);
-    curso.push(txtCurso.value);
+  // caixas de textos
+  const txtNome = document.querySelector("#nome").value;
+  const txtIdade = document.querySelector("#idade").value;
+  const txtCurso = document.querySelector("#curso").value;
+
+  console.log(txtNome);
+  if (txtNome != "" && txtIdade != "" && txtCurso != "") {
+    alunos.push([txtNome, txtIdade, txtCurso]);
   }
 });
 
 // botão auto cadastrar
+var vezCadastro = 1;
 btnAuto_cadastrar.addEventListener("click", () => {
-  nome.push("João");
-  idade.push(16);
-  curso.push("Java");
+  if (vezCadastro == 1) {
+    alunos.push(["João", 16, "Java"]);
 
-  nome.push("Maria");
-  idade.push(22);
-  curso.push("PHP");
+    alunos.push(["Maria", 22, "PHP"]);
 
-  nome.push("Jose");
-  idade.push(19);
-  curso.push("SQL");
+    alunos.push(["José", 19, "SQL"]);
 
-  nome.push("Carla");
-  idade.push(20);
-  curso.push("JavaScript");
+    alunos.push(["Carla", 20, "JavaScript"]);
 
-  nome.push("Ingrid");
-  idade.push(16);
-  curso.push("HTML e CSS");
+    alunos.push(["Ingrid", 16, "HTML e CSS"]);
+
+    vezCadastro++;
+  }
 });
 
+// função encontrar e criar
+var findCreate = (pesquisa, imprimir) => {
+  // esse map vai percorrer as linhas
+  alunos.map((el) => {
+    // esse aqui vai olhar os valores de cada coluna na linha que em que o map de cima esta
+    el.map((elem) => {
+      // condição para mostrar  valor
+      if (elem == pesquisa) {
+        imprimir.innerHTML += `
+      <div class="caixa">
+        <img class='lixo' src="img/lixeira.png" alt="">
+        <div class="inscritos">
+          <p>${el[0]}</p>
+          <p>${el[1]}</p>
+          <p>${el[2]}</p>
+        </div>
+      </div>
+        `;
+        excluir();
+      }
+    });
+  });
+};
+
 // botão imprimir
+var vez = 1;
 btnImprimir.addEventListener("click", () => {
   let imprimir = document.querySelector("#dados");
-  nome.map((el, pos) => {
-    imprimir.innerHTML += `
-        <div class="caixa">
-            <button class="btnExcluir">
-                <img src="img/lixeira.png">
-            </button>
-            <div class="inscrito">
-                <p class="nome">${el}</p>
-                <p class="idade">${idade[pos]} anos</p>
-                <p class="curso">${curso[pos]}</p><br>
-            </div>
-        </div>`;
+  let limpar = document.querySelector("#limpar");
+  limpar.style.display = "block";
+  alunos.map((el) => {
+    if (vez == 1) {
+      imprimir.innerHTML += `
+      <div class="caixa">
+        <img class='lixo' src="img/lixeira.png" alt="">
+          <div class="inscritos">
+            <p>${el[0]}</p>
+            <p>${el[1]}</p>
+            <p>${el[2]}</p>
+          </div>
+          </div>
+        `;
+        excluir();
+    }
   });
 
-  // botão excluir
-  let btnExcluir = [...document.querySelectorAll(".btnExcluir")];
-  btnExcluir.map((el) => {
-    el.addEventListener("click", (event) => {
-        // encontrar o nome do individo e armazenar a posição
-        const pos = nome.indexOf(
-            el.parentNode.querySelector(".nome").innerText
-          );
-        if (confirm(`certeza que deseja excluir ${nome[pos]}?`)) {
-            let caixa = event.target.parentNode.parentNode;
-            caixa.parentNode.removeChild(caixa);
-    
-            nome.splice(pos, 1);
-            idade.splice(pos, 1);
-            curso.splice(pos, 1);
-          }
-    });
+  vez++;
+
+  limpar.addEventListener("click", () => {
+    limpar.style.display = "none";
+    imprimir.innerHTML = "";
+    vez = 1;
   });
 });
 
 // pesquisar
 var btnPesquisar = document.querySelector("#btnPesquisar");
+// função click da pesquisa
 btnPesquisar.addEventListener("click", () => {
-  var imprimir = document.querySelector("#dadosPesquisa");
-  var encontrado;
+  let limpar = document.querySelector("#limpar");
+  limpar.style.display = "block";
+
+  let imprimir = document.querySelector("#dadosPesquisa");
   let pesquisa = document.querySelector("#pesquisar").value;
-  nome.map((el, pos) => {
-    if (el == pesquisa) encontrado = pos;
-  });
-
-  imprimir.innerHTML += `
-            <div class="caixa">
-                <button class="btnExcluir">
-                    <img src="img/lixeira.png">
-                </button>
-                <div class="inscrito">
-                    <p class="nome">${nome[encontrado]}</p>
-                    <p class="idade">${idade[encontrado]} anos</p>
-                    <p class="curso">${curso[encontrado]}</p><br>
-                </div>
-            </div>`;
-
+  findCreate(pesquisa, imprimir);
   // botão excluir
-  let btnExcluir = [...document.querySelectorAll(".btnExcluir")];
-  btnExcluir.map((el) => {
-    el.addEventListener("click", (event) => {
-      if (confirm(`certeza que deseja excluir ${nome[encontrado]}?`)) {
-        let caixa = event.target.parentNode.parentNode;
-        caixa.parentNode.removeChild(caixa);
+  let btnExcluir = [...document.querySelectorAll(".lixo")];
+  // aqui ele acrecenta em todos
 
-        nome.splice(encontrado, 1);
-        idade.splice(encontrado, 1);
-        curso.splice(encontrado, 1);
-      }
-    });
+
+
+
+  
+  // parei aqui
+  // limpar o valor e esconder o botão
+  limpar.addEventListener("click", () => {
+    limpar.style.display = "none";
+    imprimir.innerHTML = "";
+    vez = 1;
   });
 });
+
