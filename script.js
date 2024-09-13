@@ -20,7 +20,7 @@ function excluir(){
         el.map((elem)=>{
           if(elem==procNome){
             // aqui ele confirma se você quer excluir o aluno
-            if (confirm(`certeza que deseja excluir ${el[pos]}?`)) {
+            if (confirm(`certeza que deseja excluir ${el[0]}?`)) {
               // aqui é uma forma de faciliar a indenticar onde ele está inserido no html
               let caixa = event.target.parentNode;
               // aqui ele apaga o a caixa
@@ -70,18 +70,18 @@ btnAuto_cadastrar.addEventListener("click", () => {
 // função encontrar e criar
 var findCreate = (pesquisa, imprimir) => {
   // esse map vai percorrer as linhas
-  alunos.map((el) => {
+  alunos.map((el_pesquisa) => {
     // esse aqui vai olhar os valores de cada coluna na linha que em que o map de cima esta
-    el.map((elem) => {
+    el_pesquisa.map((elem_pesquisa) => {
       // condição para mostrar  valor
-      if (elem == pesquisa) {
+      if (elem_pesquisa == pesquisa) {
         imprimir.innerHTML += `
       <div class="caixa">
         <img class='lixo' src="img/lixeira.png" alt="">
         <div class="inscritos">
-          <p>${el[0]}</p>
-          <p>${el[1]}</p>
-          <p>${el[2]}</p>
+          <p>${el_pesquisa[0]}</p>
+          <p>${el_pesquisa[1]}</p>
+          <p>${el_pesquisa[2]}</p>
         </div>
       </div>
         `;
@@ -133,9 +133,6 @@ btnPesquisar.addEventListener("click", () => {
   let pesquisa = document.querySelector("#pesquisar").value;
   findCreate(pesquisa, imprimir);
   // botão excluir
-  let btnExcluir = [...document.querySelectorAll(".lixo")];
-  // aqui ele acrecenta em todos
-
 
 
 
